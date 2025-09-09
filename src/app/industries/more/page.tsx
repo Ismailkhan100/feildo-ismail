@@ -50,7 +50,7 @@ const IndustryCard: React.FC<IndustryCardProps> = ({ title, description, icon, l
 const Industries: NextPage = () => {
   const industries = [
     { 
-      title: 'Landscaping & Lawn Care', 
+      title: 'Landscaping & Lawn Care.', 
       description: 'Professional landscaping and lawn care management software for outdoor service professionals.', 
       icon: <FaTree />,
       link: '/industries/landscaping-lawn-care'
