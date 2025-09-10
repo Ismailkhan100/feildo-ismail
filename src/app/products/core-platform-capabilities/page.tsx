@@ -31,7 +31,7 @@ function CorePlatformCapabilities() {
   const [activeModule, setActiveModule] = useState(0);
 
   const toggleFaq = (index: number) => {
-    setOpenFaq(openFaq === index ? null : index);
+const [openFaq, setOpenFaq] = useState<number | null>(null);
   };
 
   const modules = [

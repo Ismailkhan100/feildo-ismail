@@ -20,6 +20,7 @@ import {
   Package,
   Navigation
 } from 'lucide-react';
+import Link from 'next/link';
 import Footer from '@/app/components/Footer';
 import Navbar from '@/app/components/Navbar';
 
@@ -373,13 +374,13 @@ const MobileAppFeaturesPage = () => {
             exceptional customer experiences every day.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-blue-700 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center gap-2">
-              Start Free Trial
-              <ArrowRight className="w-5 h-5" />
-            </button>
-            <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white/10 transition-colors duration-200">
-              Schedule Demo
-            </button>
+          <Link 
+                href="/contact"
+                className="bg-blue-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-blue-700 transition-colors duration-200 shadow-sm"
+              >
+                Get Started
+              </Link>
+            
           </div>
         </div>
       </section>

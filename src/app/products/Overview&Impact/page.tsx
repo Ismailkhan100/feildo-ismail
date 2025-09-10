@@ -2,6 +2,7 @@
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import React, { useState } from "react";
+import Link from "next/link";
 import { TrendingUp, DollarSign, Users, Clock, CheckCircle, ArrowRight, BarChart3, Target, Zap, Shield } from "lucide-react";
 
 function OverviewImpact() {
@@ -213,9 +214,12 @@ function OverviewImpact() {
             </div>
 
             <div className="text-center mt-12">
-              <button className="bg-blue-600 text-white px-8 py-4 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                Get Started Today
-              </button>
+              <Link 
+                href="/contact"
+                className="bg-blue-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-blue-700 transition-colors duration-200 shadow-sm"
+              >
+                Get Started
+              </Link>
             </div>
           </div>
         </div>

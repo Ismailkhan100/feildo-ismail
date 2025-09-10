@@ -396,26 +396,6 @@ const Industries: NextPage = () => {
             </div>
           </div>
         </section>
-
-        {/* CTA Section */}
-        <section className="bg-white py-16">
-          <div className="max-w-4xl mx-auto text-center px-6">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Ready to Transform Your Field Operations?
-            </h2>
-            <p className="text-xl text-gray-600 mb-10 leading-relaxed">
-              Join thousands of businesses that trust Fielduo to streamline their field service management.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-blue-600 text-white px-8 py-4 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-lg">
-                Request a Demo
-              </button>
-              <button className="bg-transparent border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-full font-semibold hover:bg-blue-600 hover:text-white transition-colors duration-300">
-                Contact Sales
-              </button>
-            </div>
-          </div>
-        </section>
       </div>
       <Footer />
     </>

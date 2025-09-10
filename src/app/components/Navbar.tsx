@@ -80,7 +80,6 @@ const Navbar = () => {
     { name: 'Pricing', href: '/pricing' },
     { name: 'Blogs', href: '/blogs' },
     { name: 'About', href: '/about' },
-    { name: 'Contact Us', href: '/contact' },
   ];
 
   return (
@@ -158,11 +157,8 @@ const Navbar = () => {
               <button className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50/50 rounded-full transition-colors duration-200">
                 <Search className="h-5 w-5" />
               </button>
-              <button className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50/50 rounded-full transition-colors duration-200">
-                <ShoppingBag className="h-5 w-5" />
-              </button>
               <Link 
-                href="/get-started"
+                href="/contact"
                 className="bg-blue-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-blue-700 transition-colors duration-200 shadow-sm"
               >
                 Get Started
