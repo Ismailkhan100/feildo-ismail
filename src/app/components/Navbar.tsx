@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ChevronDown, Menu, X, Search, ShoppingBag } from 'lucide-react';
 
@@ -8,6 +8,8 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileDropdown, setMobileDropdown] = useState<string | null>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   // Handle scroll effect
   useEffect(() => {
@@ -16,6 +18,21 @@ const Navbar = () => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setIsMobileMenuOpen(false);
+        setMobileDropdown(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   // Types for navigation items
@@ -86,7 +103,7 @@ const Navbar = () => {
     <>
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-white/80 backdrop-blur-xl border-b border-gray-200/20 shadow-sm' 
+          ? 'bg-white/95 backdrop-blur-xl border-b border-gray-200/20 shadow-sm' 
           : 'bg-white/95 backdrop-blur-xl'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -153,13 +170,16 @@ const Navbar = () => {
             </div>
 
             {/* Right side icons */}
-            <div className="hidden lg:flex items-center space-x-4">
+            <div className="flex items-center space-x-4">
               <button className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50/50 rounded-full transition-colors duration-200">
                 <Search className="h-5 w-5" />
               </button>
+              <button className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50/50 rounded-full transition-colors duration-200 lg:hidden">
+                <ShoppingBag className="h-5 w-5" />
+              </button>
               <Link 
                 href="/contact"
-                className="bg-blue-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-blue-700 transition-colors duration-200 shadow-sm"
+                className="hidden lg:block bg-blue-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-blue-700 transition-colors duration-200 shadow-sm"
               >
                 Get Started
               </Link>
@@ -170,6 +190,7 @@ const Navbar = () => {
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50/50 rounded-md transition-colors duration-200"
+                aria-label="Toggle menu"
               >
                 {isMobileMenuOpen ? (
                   <X className="h-6 w-6" />
@@ -182,49 +203,79 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden bg-white/95 backdrop-blur-xl border-t border-gray-200/20">
-            <div className="px-4 pt-4 pb-6 space-y-2">
-              {navItems.map((item) => (
-                <div key={item.name}>
+        <div 
+          ref={mobileMenuRef}
+          className={`lg:hidden bg-white/95 backdrop-blur-xl border-t border-gray-200/20 transition-all duration-300 ease-in-out overflow-hidden ${
+            isMobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+          }`}
+        >
+          <div className="px-4 pt-4 pb-6 space-y-2">
+            {navItems.map((item) => (
+              <div key={item.name} className="border-b border-gray-100 last:border-b-0 pb-2 last:pb-0">
+                {item.hasDropdown ? (
+                  <>
+                    <button
+                      onClick={() => setMobileDropdown(mobileDropdown === item.name ? null : item.name)}
+                      className="flex items-center justify-between w-full px-3 py-3 text-base font-medium text-gray-700 hover:text-gray-900 rounded-lg transition-colors duration-200"
+                    >
+                      {item.name}
+                      <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${
+                        mobileDropdown === item.name ? 'rotate-180' : ''
+                      }`} />
+                    </button>
+                    
+                    {/* Mobile dropdown items */}
+                    <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                      mobileDropdown === item.name ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                    }`}>
+                      <div className="ml-4 mt-2 space-y-2 border-l border-gray-200 pl-2">
+                        {item.dropdownItems?.map((dropdownItem) => (
+                          <Link
+                            key={dropdownItem.name}
+                            href={dropdownItem.href}
+                            className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 rounded-md transition-colors duration-200"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <div className="font-medium">{dropdownItem.name}</div>
+                            {dropdownItem.desc && (
+                              <div className="text-xs text-gray-500 mt-1">{dropdownItem.desc}</div>
+                            )}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                ) : (
                   <Link
-                    href={item.hasDropdown ? '#' : item.href}
-                    className="block px-3 py-3 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50/50 rounded-lg transition-colors duration-200"
-                    onClick={() => !item.hasDropdown && setIsMobileMenuOpen(false)}
+                    href={item.href}
+                    className="block px-3 py-3 text-base font-medium text-gray-700 hover:text-gray-900 rounded-lg transition-colors duration-200"
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.name}
                   </Link>
-                  
-                  {/* Mobile dropdown items */}
-                  {item.hasDropdown && (
-                    <div className="ml-4 mt-2 space-y-1">
-                      {item.dropdownItems?.map((dropdownItem) => (
-                        <Link
-                          key={dropdownItem.name}
-                          href={dropdownItem.href}
-                          className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50/50 rounded-md transition-colors duration-200"
-                          onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                          {dropdownItem.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-              
-              <div className="pt-4 border-t border-gray-200/20 mt-4">
-                <Link 
-                  href="/get-started"
-                  className="block w-full bg-blue-600 text-white text-center px-6 py-3 rounded-full text-sm font-medium hover:bg-blue-700 transition-colors duration-200"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Get Started
-                </Link>
+                )}
               </div>
+            ))}
+            
+            <div className="pt-4 border-t border-gray-200/20 mt-4 space-y-4">
+              <div className="flex items-center justify-center space-x-4">
+                <button className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50/50 rounded-full transition-colors duration-200">
+                  <Search className="h-5 w-5" />
+                </button>
+                <button className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50/50 rounded-full transition-colors duration-200">
+                  <ShoppingBag className="h-5 w-5" />
+                </button>
+              </div>
+              <Link 
+                href="/contact"
+                className="block w-full bg-blue-600 text-white text-center px-6 py-3 rounded-full text-base font-medium hover:bg-blue-700 transition-colors duration-200"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Get Started
+              </Link>
             </div>
           </div>
-        )}
+        </div>
       </nav>
 
       {/* Spacer to prevent content from hiding behind navbar */}
